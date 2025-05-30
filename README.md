@@ -2,10 +2,6 @@
 
 A modern memory forensics framework written in Rust, designed for analyzing memory dumps for security investigations and incident response.
 
-<p align="center">
-  <img src="docs/banner.png" alt="RMF Banner" width="600">
-</p>
-
 ## Features
 
 🔍 **Memory Analysis Tools**
