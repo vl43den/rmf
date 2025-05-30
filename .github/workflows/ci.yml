@@ -1,0 +1,81 @@
+name: Rust CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable, nightly]
+        include:
+          - rust: stable
+            features: ""
+            rustflags: ""
+          - rust: nightly
+            features: "--all-features"
+            rustflags: -Z doctest-xcompile
+        exclude:
+          - os: windows-latest
+            rust: nightly
+          - os: macos-latest
+            rust: nightly
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: ${{ matrix.rust }}
+        
+    - name: Install dependencies (Ubuntu)
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libssl-dev pkg-config
+    
+    - name: Build
+      run: cargo build --verbose ${{ matrix.features }}
+    
+    - name: Run tests
+      run: cargo test --verbose ${{ matrix.features }}
+      
+    - name: Run clippy
+      if: ${{ matrix.rust == 'stable' }}
+      run: cargo clippy -- -D warnings
+      
+    - name: Run fmt check
+      if: ${{ matrix.rust == 'stable' }}
+      run: cargo fmt -- --check
+
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: nightly
+        components: llvm-tools-preview
+        
+    - name: Install cargo-llvm-cov
+      uses: taiki-e/install-action@cargo-llvm-cov
+    
+    - name: Generate code coverage
+      run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: lcov.info
+        fail_ci_if_error: true

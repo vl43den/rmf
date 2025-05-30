@@ -1,0 +1,14 @@
+[package]
+name = "rmf-credential-scanner"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+rmf = { path = "../../../" }
+indicatif = "0.17"
+
+[dev-dependencies]
+tempfile = "3.8"
