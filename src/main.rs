@@ -139,8 +139,10 @@ fn main() -> Result<()> {
     
     // Always enable colors
     colored::control::set_override(true);
-    
+
     loader::display_banner();
+    // Initialize built-in plugins so they are available for commands
+    plugin::init_plugins();
     let cli = Cli::parse();
     
     match cli.cmd {
