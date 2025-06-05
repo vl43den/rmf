@@ -54,7 +54,7 @@ impl PluginRegistry {
     }
     
     /// Attempt to load an external plugin from a dynamic library
-    #[cfg(unix)]
+    #[cfg(all(unix, feature = "plugins"))]
     pub fn load_plugin_from_file(&mut self, path: &PathBuf) -> Result<()> {
         use libloading::{Library, Symbol};
         
@@ -82,7 +82,7 @@ impl PluginRegistry {
         Ok(())
     }
     
-    #[cfg(windows)]
+    #[cfg(all(windows, feature = "plugins"))]
     pub fn load_plugin_from_file(&mut self, path: &PathBuf) -> Result<()> {
         use libloading::{Library, Symbol};
         
