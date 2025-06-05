@@ -174,7 +174,7 @@ fn main() -> Result<()> {
             if let Some(out_path) = &output {
                 println!("Will export findings to: {}", out_path.display().to_string().bright_cyan());
             }
-            plugin::run_plugin(dump, plugin)?
+            plugin::run_plugin(dump, plugin, output)?
         },
         
         Commands::ListPlugins => {
@@ -211,7 +211,7 @@ fn main() -> Result<()> {
                 _ => "string_carve",  // Default to string carving
             };
             
-            plugin::run_plugin(dump, plugin_name.to_string())?
+            plugin::run_plugin(dump, plugin_name.to_string(), None)?
         },
         
         Commands::Translate { dump, address, dtb } => {

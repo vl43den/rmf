@@ -14,6 +14,7 @@ A modern memory forensics framework written in Rust, designed for analyzing memo
 - Extensible plugin architecture
 - Supports built-in and external plugins
 - Scan memory for various forensic artifacts
+- Export plugin findings to CSV
 
 ⚡ **Performance**
 - Fast memory mapping with minimal overhead
@@ -66,6 +67,9 @@ rmf extract-modules path/to/memory.dump output/dir
 ```bash
 # Run a specific plugin
 rmf run-plugin path/to/memory.dump string_carve
+
+# Run a plugin and export findings to CSV
+rmf run-plugin path/to/memory.dump string_carve --output findings.csv
 
 # List all available plugins
 rmf list-plugins
