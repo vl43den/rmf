@@ -20,10 +20,16 @@ use indicatif::{ProgressBar, ProgressStyle, MultiProgress};
 use pager::Pager;
 use prettytable::{Table, row, format};
 use std::path::PathBuf;
+use serde_json;
+use csv::Writer;
 use crate::loader::load_memory_image;
 
 /// Run a plugin by name on the provided memory dump
-pub fn run_plugin(dump_path: PathBuf, plugin_name: String) -> Result<()> {
+pub fn run_plugin(
+    dump_path: PathBuf,
+    plugin_name: String,
+    csv_output: Option<PathBuf>,
+) -> Result<()> {
     println!("{} {} {} {}",
         "Running plugin".bright_green(),
         plugin_name.bright_yellow().bold(),
@@ -89,6 +95,27 @@ pub fn run_plugin(dump_path: PathBuf, plugin_name: String) -> Result<()> {
         );
 
         table.printstd();
+
+        if let Some(csv_path) = csv_output {
+            let mut wtr = Writer::from_path(&csv_path)?;
+            wtr.write_record(["plugin", "address", "confidence", "description", "details"])?;
+            for finding in &findings {
+                let details = serde_json::to_string(&finding.details)?;
+                wtr.write_record([
+                    finding.plugin.clone(),
+                    format!("0x{:X}", finding.addr),
+                    finding.confidence.to_string(),
+                    finding.desc.clone(),
+                    details,
+                ])?;
+            }
+            wtr.flush()?;
+            println!(
+                "{} {}",
+                "Exported findings to".bright_green(),
+                csv_path.display().to_string().bright_cyan()
+            );
+        }
     } else {
         println!("{}", "No findings from the scan".bright_yellow());
     }
