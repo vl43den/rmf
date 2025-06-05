@@ -24,6 +24,15 @@ use serde_json;
 use csv::Writer;
 use crate::loader::load_memory_image;
 
+/// Initialize built-in plugins and register them in the global registry
+pub fn init_plugins() {
+    let registry = get_plugin_registry();
+    let mut registry = registry.write().unwrap();
+
+    registry.register(Box::new(StringCarvePlugin::default()));
+    registry.register(Box::new(PEScanner));
+}
+
 /// Run a plugin by name on the provided memory dump
 pub fn run_plugin(
     dump_path: PathBuf,
