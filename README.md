@@ -1,27 +1,27 @@
-# 🕵️‍♂️ RMF - Rust Memory Forensics Toolkit
+# RMF - Rust Memory Forensics Toolkit
 
 A modern memory forensics framework written in Rust, designed for analyzing memory dumps for security investigations and incident response.
 
 ## Features
 
-🔍 **Memory Analysis Tools**
+**Memory Analysis Tools**
 - Process listing and information extraction
 - Module and DLL enumeration
 - String extraction and pattern scanning
 - Memory address translation and paging support
 
-🔌 **Plugin System**
+**Plugin System**
 - Extensible plugin architecture
 - Supports built-in and external plugins
 - Scan memory for various forensic artifacts
 - Export plugin findings to CSV
 
-⚡ **Performance**
+**Performance**
 - Fast memory mapping with minimal overhead
 - Built with Rust for memory safety and performance
 - Efficient scanning algorithms
 
-🖥️ **User Experience**
+**User Experience**
 - Color-coded terminal output
 - Progress bars for long-running operations
 - Tabular data presentation
